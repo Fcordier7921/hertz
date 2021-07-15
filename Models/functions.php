@@ -392,6 +392,7 @@ function requete_vehicules_dispo() // Requête établissant la liste des véhicu
     $bdd=connect();
         $recup= $bdd->prepare('SELECT id_Vehicules FROM louer WHERE retour_Louer = 0 and louer.date_debut_Louer< now()');
         $id=$recup->fetchAll();
+        
         $id_list=implode(', ', array_column($id, 'id_Vehicules'));
         $sql= $bdd->prepare('SELECT vehicules.*, louer.retour_Louer, louer.date_debut_Louer  
         from vehicules 
@@ -423,10 +424,10 @@ function aff_voitdispo() //Boucle d'affichage des véhicules disponibles à la l
 function aff_voitdispoFront() // boucle d'affichage des véhicules disponible à la location coté client
         {    
             $sql=requete_vehicules_dispo();
-            $tutu=$sql->fetch();
-                while($donnees = $tutu)
+            
+                while($donnees = $sql->fetch(PDO::FETCH_ASSOC))
                 {
-                    echo "tutu";
+                    
                     if(($donnees['retour_Louer']=='1')||($donnees['retour_Louer']==NULL)){
                         switch($donnees['modele_Vehicules']){
                             case "Fiat 500";
