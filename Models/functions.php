@@ -426,6 +426,7 @@ function aff_voitdispoFront() // boucle d'affichage des véhicules disponible à
             $tutu=$sql->fetch();
                 while($donnees = $tutu)
                 {
+                    echo "tutu";
                     if(($donnees['retour_Louer']=='1')||($donnees['retour_Louer']==NULL)){
                         switch($donnees['modele_Vehicules']){
                             case "Fiat 500";
