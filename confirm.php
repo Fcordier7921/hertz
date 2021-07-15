@@ -6,7 +6,7 @@ function connect()
     {
         try
         {
-            $bdd = new PDO('mysql:host=localhost;dbname=fredericc_herz;', 'fredericc', 'pSLp6Jpk8yjbtA==');
+            $bdd = new PDO('mysql:host=localhost;dbname=hertz;port=3306;charset=utf8', 'root', '');
             return $bdd;
             $bdd->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             $bdd->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_OBJ);
@@ -40,7 +40,7 @@ $titrepage='Création compte';
 require 'header_client.php'; 
 ?>
 <h1>Vous compte a été créer</h1>
-<?php var_dump($_SESSION); ?>
+<?php var_dump($_SESSION['identifiant']); ?>
 <form action="" method="post">
 <button type="submit" name="button" value="button" class="btn btn-secondary">Continuer</button>
 </form>

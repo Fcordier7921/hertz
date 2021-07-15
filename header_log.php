@@ -30,12 +30,12 @@
     </button>
     <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
       <ul class="navbar-nav">
-        <li class="nav-item active">
+        <!-- <li class="nav-item active">
           <a class="nav-link" href="register.php">S'incrire </a>
         </li>
         <li class="nav-item">
           <a class="nav-link" href="login.php">Se connecter</a>
-        </li>
+        </li> -->
         <li class="nav-item">
           <a class="nav-link" href="admin.php">Connexion admin</a>
         </li>

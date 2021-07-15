@@ -3,7 +3,7 @@ function connect() //fonction de connextion à la base
     {
         try
         {
-            $bdd = new PDO('mysql:host=localhost;dbname=fredericc_herz;', 'fredericc', 'pSLp6Jpk8yjbtA==');
+            $bdd = new PDO('mysql:host=localhost;dbname=Hertz;port=3306;charset=utf8', 'root', '');
             return $bdd;
          
         }
@@ -58,8 +58,6 @@ function ajouterc() //fonction ajout d'un client
         
                 if($estceok){
                     echo 'votre enregistrement a été ajouté avec succès <br>';
-                    
-                refresh('crudclients.php');
                 } else {
                     echo 'Veuillez recommencer svp, une erreur est survenue <br>';
                 }
@@ -102,7 +100,6 @@ function ajouterl() //fonction ajout d'une location
                 if($estceok)
                 {
                     echo 'votre enregistrement a été ajouté avec succès <br>';
-                    
                 } 
                 else 
                 {
@@ -393,13 +390,14 @@ function aff_historique_client($id_client)//Boucle d'affichage des anciennes loc
 function requete_vehicules_dispo() // Requête établissant la liste des véhicules disponibles à la location
     {
     $bdd=connect();
-        $recup= $bdd->query('SELECT id_Vehicules FROM louer WHERE retour_Louer = 0 and louer.date_debut_Louer< now()');
+        $recup= $bdd->prepare('SELECT id_Vehicules FROM louer WHERE retour_Louer = 0 and louer.date_debut_Louer< now()');
         $id=$recup->fetchAll();
         $id_list=implode(', ', array_column($id, 'id_Vehicules'));
-        $sql= $bdd->query('SELECT vehicules.*, louer.retour_Louer, louer.date_debut_Louer  
+        $sql= $bdd->prepare('SELECT vehicules.*, louer.retour_Louer, louer.date_debut_Louer  
         from vehicules 
         LEFT JOIN louer ON vehicules.id_Vehicules=louer.id_Vehicules 
         WHERE (vehicules.id_Vehicules NOT IN ('.$id_list.')) GROUP BY vehicules.id_Vehicules');
+        $sql->execute();
         return $sql;
     }
 
@@ -407,6 +405,7 @@ function requete_vehicules_dispo() // Requête établissant la liste des véhicu
 function aff_voitdispo() //Boucle d'affichage des véhicules disponibles à la location coté administrateur
     {
         $sql=requete_vehicules_dispo();
+
         while($donnees = $sql->fetch())
         {
             if(($donnees['retour_Louer']=='1')||($donnees['retour_Louer']==NULL)){
@@ -424,8 +423,8 @@ function aff_voitdispo() //Boucle d'affichage des véhicules disponibles à la l
 function aff_voitdispoFront() // boucle d'affichage des véhicules disponible à la location coté client
         {    
             $sql=requete_vehicules_dispo();
-
-                while($donnees = $sql->fetch())
+            $tutu=$sql->fetch();
+                while($donnees = $tutu)
                 {
                     if(($donnees['retour_Louer']=='1')||($donnees['retour_Louer']==NULL)){
                         switch($donnees['modele_Vehicules']){
