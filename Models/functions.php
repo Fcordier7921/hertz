@@ -391,14 +391,14 @@ function requete_vehicules_dispo() // Requête établissant la liste des véhicu
     {
     $bdd=connect();
         $recup= $bdd->prepare('SELECT id_Vehicules FROM louer WHERE retour_Louer = 0 and louer.date_debut_Louer< now()');
-        $id=$recup->fetchAll();
-        
+        $recup->execute();
+        $id= $recup->fetchAll();
+        // var_dump($id);
         $id_list=implode(', ', array_column($id, 'id_Vehicules'));
-        $sql= $bdd->prepare('SELECT vehicules.*, louer.retour_Louer, louer.date_debut_Louer  
-        from vehicules 
-        LEFT JOIN louer ON vehicules.id_Vehicules=louer.id_Vehicules 
-        WHERE (vehicules.id_Vehicules NOT IN ('.$id_list.')) GROUP BY vehicules.id_Vehicules');
+        // var_dump($id_list);
+        $sql= $bdd->prepare('SELECT vehicules.*, louer.retour_Louer, louer.date_debut_Louer FROM vehicules LEFT JOIN louer ON vehicules.id_Vehicules=louer.id_Vehicules WHERE (vehicules.id_Vehicules NOT IN ('.$id_list.')) GROUP BY id_Vehicules');
         $sql->execute();
+        // var_dump($sql);
         return $sql;
     }
 
@@ -409,6 +409,7 @@ function aff_voitdispo() //Boucle d'affichage des véhicules disponibles à la l
 
         while($donnees = $sql->fetch())
         {
+            
             if(($donnees['retour_Louer']=='1')||($donnees['retour_Louer']==NULL)){
             echo '<tr class="text-center"><td>'.$donnees['id_Vehicules'].'</td><td>'.$donnees['type_Vehicules'].'</td><td>'.$donnees['modele_Vehicules'].'</td><td>'.$donnees['immatriculation_Vehicules'].'</td><td>Plus de 30 jours</td></tr>';
         }
@@ -425,7 +426,7 @@ function aff_voitdispoFront() // boucle d'affichage des véhicules disponible à
         {    
             $sql=requete_vehicules_dispo();
             
-                while($donnees = $sql->fetch(PDO::FETCH_ASSOC))
+                while($donnees = $sql->fetch())
                 {
                     
                     if(($donnees['retour_Louer']=='1')||($donnees['retour_Louer']==NULL)){
